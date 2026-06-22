@@ -32,12 +32,14 @@ const shouldRun =await shouldRunYts()
 
 
   if(isRadarrAvailableagain && isSonarrAvailableagain) {
-     if (shouldRun) {
-      console.log('Running mediaexclustion table creation sync...');
- await syncMediaExclusions();
- await updateYtsRunTime();
-  await delay(1000,true);
-  }
+
+     await syncMediaExclusions();
+//      if (shouldRun) {
+//       console.log('Running mediaexclustion table creation sync...');
+//  await syncMediaExclusions();
+//  await updateYtsRunTime();
+//   await delay(1000,true);
+//   }
     
   }
   
