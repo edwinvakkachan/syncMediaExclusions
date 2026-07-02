@@ -18,9 +18,7 @@ async function main() {
     await log();
 
     console.log("syncMediaExclusions process started");
-    await publishMessage({
-      message: "syncMediaExclusions process started"
-    });
+
 
     await initDB();
     console.log("db is ready");
@@ -43,9 +41,7 @@ const shouldRun =await shouldRunYts()
     
   }
   
-    await publishMessage({
-      message: "syncMediaExclusions completed successfully"
-    });
+
 
 
 
