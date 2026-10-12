@@ -31,6 +31,7 @@ async function syncRadarrExclusions() {
       `Radarr exclusions: ${data.length}`
     );
 
+
     for (const item of data) {
 
       await pool.query(`
@@ -39,21 +40,24 @@ async function syncRadarrExclusions() {
           external_id,
           title,
           tmdb_id,
+          year,
           last_seen
         )
         VALUES (
           'radarr',
-          $1,$2,$3,NOW()
+          $1,$2,$3,$4,NOW()
         )
         ON CONFLICT (source, external_id)
         DO UPDATE SET
           title = EXCLUDED.title,
           tmdb_id = EXCLUDED.tmdb_id,
+          year = EXCLUDED.year,
           last_seen = NOW()
       `, [
         item.id,
         item.movieTitle || item.title,
-        item.tmdbId
+        item.tmdbId,
+        item.movieYear
       ]);
 
       console.log(
@@ -86,6 +90,8 @@ async function syncSonarrExclusions() {
     console.log(
       `Sonarr exclusions: ${data.length}`
     );
+
+
 
     for (const item of data) {
 

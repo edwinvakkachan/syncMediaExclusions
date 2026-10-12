@@ -10,8 +10,8 @@ import { publishMessage } from "./queue/publishMessage.js";
 import { initDB } from "./db/db.js";
 import { checkRadarr, checkSonarr } from "./radarrSonarravailabilitycheck.js";
 import { syncMediaExclusions } from "./addingtorrents/syncMediaExclusions.js";
-import { shouldRunYts,updateYtsRunTime } from "./yts/yts.js";
-
+import {populateRadarrImdbIds } from "./populateRadarrImdbIds.js";
+import { populateSonarrImdbIds } from "./populateSonarrImdbIds.js";
 
 async function main() {
   try {
@@ -23,7 +23,6 @@ async function main() {
     await initDB();
     console.log("db is ready");
 
-const shouldRun =await shouldRunYts()
 
   const isRadarrAvailableagain = await checkRadarr();
   const isSonarrAvailableagain = await checkSonarr();
@@ -32,17 +31,28 @@ const shouldRun =await shouldRunYts()
   if(isRadarrAvailableagain && isSonarrAvailableagain) {
 
      await syncMediaExclusions();
-//      if (shouldRun) {
-//       console.log('Running mediaexclustion table creation sync...');
-//  await syncMediaExclusions();
-//  await updateYtsRunTime();
-//   await delay(1000,true);
-//   }
-    
+
+  }
+  else {
+    console.log('Radarr and sonarr are in offline');
+     process.exit(1);
+  }
+
+  if (await checkRadarr()){
+    await populateRadarrImdbIds();
+  }
+  else {
+    console.log('Radarr unavialble');
+    process.exit(1);
   }
   
-
-
+  if (await checkSonarr()){
+    await populateSonarrImdbIds();
+  }
+  else {
+    console.log('sonarr unavialble');
+    process.exit(1);
+  }
 
 
     await log();
